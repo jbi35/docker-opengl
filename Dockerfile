@@ -1,8 +1,5 @@
-FROM ubuntu:16.04
+FROM ubuntu:20.04
 #FROM dockcross/base:latest
-#MAINTAINER Matt McCormick <matt.mccormick@kitware.com>
-
-#ENV DEFAULT_DOCKCROSS_IMAGE thewtex/opengl
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   git \
@@ -10,7 +7,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   menu \
   net-tools \
   openbox \
-  python-pip \
+  python3-pip \
   sudo \
   supervisor \
   tint2 \
@@ -22,10 +19,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   xserver-xorg-input-void \
   websockify && \
   rm -f /usr/share/applications/x11vnc.desktop && \
-  apt-get remove -y python-pip && \
-  wget https://bootstrap.pypa.io/get-pip.py && \
-  python get-pip.py && \
-  pip install supervisor-stdout && \
+  # install directly from repo asa pipy version does not work with python 3 yet
+  pip install git+https://github.com/coderanger/supervisor-stdout.git &&\
   apt-get -y clean
 
 COPY etc/skel/.xinitrc /etc/skel/.xinitrc
@@ -61,8 +56,8 @@ ARG IMAGE
 ARG VCS_REF
 ARG VCS_URL
 LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name=$IMAGE \
-      org.label-schema.description="An image based on debian/jessie containing an X_Window_System which supports rendering graphical applications, including OpenGL apps" \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url=$VCS_URL \
-      org.label-schema.schema-version="1.0"
+  org.label-schema.name=$IMAGE \
+  org.label-schema.description="An image based on debian/jessie containing an X_Window_System which supports rendering graphical applications, including OpenGL apps" \
+  org.label-schema.vcs-ref=$VCS_REF \
+  org.label-schema.vcs-url=$VCS_URL \
+  org.label-schema.schema-version="1.0"
